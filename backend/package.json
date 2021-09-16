@@ -1,0 +1,26 @@
+{
+  "name": "grocer-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "client": "cd client && yarn start",
+    "server": "nodemon server.js",
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn        client\""
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.16.4",
+    "nodemon": "^2.0.2",
+    "mongoose": "^5.8.9",
+    "morgan": "^1.9.1",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {
+    "concurrently": "^4.0.1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
