@@ -128,14 +128,15 @@ export default function Cart() {
   //Passes in e which is the item being checked off
   function handlePress(e) {
     //TODO: need to change variable e to something more descriptive
-
     //UpdatedCART contains modified list after item is checked off list
     const updatedCART = CART.map((item) => {
       //Finds the item that has been checked off in the list and shanges its "Checked" status
       const newItem = item.data.map((item) => {
         if (item.name === e.name) {
+          //When item is found in array set checked value
           return { ...item, checked: !item.checked };
         }
+        //otherwise return item as is
         return item;
       });
 
@@ -144,19 +145,36 @@ export default function Cart() {
         //Used to track how many items have been chekced off.
         let count;
 
-        //If item is being unchecked, decrement count
-        //If item is being chekced off, increment count
-        {
-          e.checked
-            ? (count = item.itemCheckedCount - 1)
-            : (count = item.itemCheckedCount + 1);
+        // If item is already checked off and user is unchecking it, remove the area from tthe areaArray
+        if (e.checked) {
+          //If item is being unchecked, decrement count
+          count = item.itemCheckedCount - 1;
+          console.log("toggleChecked.area", toggleChecked.area);
+          setToggleChecked({
+            ...toggleChecked,
+            area: toggleChecked.area.splice(
+              toggleChecked.area.indexOf(e.area),
+              1
+            ),
+          });
+          console.log("toggleChecked.area [after]", toggleChecked.area);
+
+          //TODO: Need to figure out why i called this here
+          console.log("e", e);
+          areaDropDown(e);
+        } else {
+          //item was not checked
+          //If item is being chekced off, increment count
+          count = item.itemCheckedCount + 1;
+
+          setToggleChecked({
+            ...toggleChecked,
+            area: toggleChecked.area.concat(e.area),
+          });
         }
 
-        //If there is an item checked in locations list, set checked to true
-        let checked;
-        {
-          count > 0 ? (checked = true) : (checked = false);
-        }
+        //If there is an item checked in locations list, set checked to true otherwise set to false
+        let checked = count > 0;
         return {
           ...item,
           itemChecked: checked,
@@ -170,57 +188,43 @@ export default function Cart() {
 
     //sets the grocery list state to new updated list
     setCart(updatedCART);
-    //**************************************!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */
-    //? I think i should be able to move this code up into above if statement
-    if (e.checked) {
-      console.log("checked_________________");
-      console.log("should remove refrig", e.area);
-      setToggleChecked({
-        ...toggleChecked,
-        area: toggleChecked.area.splice(toggleChecked.area.indexOf(e.area), 1),
-      });
-      areaDropDown(e);
-    } else {
-      console.log("NOT CHECKED");
-      console.log("adding ", e.area);
-      setToggleChecked({
-        ...toggleChecked,
-        area: toggleChecked.area.concat(e.area),
-      });
-    }
   }
 
-  function handleDropDown(section, curArea) {
+  // Handles drop down arrow press, used for displaying checked off items
+  function handleDropDown(section) {
+    var curArea = "";
+
     if (toggleChecked.currentArea === "") {
+      //If location string is empty, set string to location
       curArea = section.area;
     } else if (!toggleChecked.currentArea.includes(section.area)) {
+      //If location string is not empty and location being opened up has not been added, add location to string
       curArea = toggleChecked.currentArea + section.area;
     } else {
+      //If loaction string has location in it, remove and replace with nothing
       curArea = toggleChecked.currentArea.replace(section.area, "");
     }
+    //Sets state toggleChecked current area to string curArea
     setToggleChecked({
       ...toggleChecked,
       currentArea: curArea,
     });
   }
 
+  //TODO: this needs to be an individual component
+  //Generates location drop down icon, function runs for every location in list
   function areaDropDown(section) {
-    var curArea = "";
-    console.log("---------------------------");
+    //declares variable to pass to hadleDropdown, //!Should be declared in handleDropdown
+    //TODO: Move variable curArea to handleDropdown
+
+    //If current area in iteration is in area that has item checked off and no items have been checked off
+    // && section.itemCheckedCount > 0
     console.log("toggleChecked.area", toggleChecked.area);
-    console.log("section.area", section.area);
-    if (
-      toggleChecked.area.includes(section.area) &&
-      section.itemCheckedCount > 0
-    ) {
-      console.log("Drop");
+    if (toggleChecked.area.includes(section.area)) {
       return (
-        <Text
-          style={styles.dropdown}
-          onPress={() => handleDropDown(section, curArea)}
-        >
-          {toggleChecked.status &&
-          toggleChecked.currentArea.includes(section.area) ? (
+        <Text style={styles.dropdown} onPress={() => handleDropDown(section)}>
+          {/* toggleChecked.status && */}
+          {toggleChecked.currentArea.includes(section.area) ? (
             <FontAwesome name="angle-up" size={24} color="black" />
           ) : (
             <FontAwesome name="angle-down" size={24} color="black" />
@@ -228,7 +232,6 @@ export default function Cart() {
         </Text>
       );
     } else {
-      console.log("no drop");
       return null;
     }
   }
@@ -239,6 +242,7 @@ export default function Cart() {
         sections={CART}
         keyExtractor={(item, index) => item + index}
         renderSectionHeader={({ section }) => {
+          // Section is the in store location header
           return (
             <View style={styles.container}>
               <Text style={styles.sectionHeader}>{section.area}</Text>
@@ -252,6 +256,7 @@ export default function Cart() {
           );
         }}
         renderItem={({ item }) => {
+          //Item is each individual item within a location within the store
           if (!item.checked || toggleChecked.currentArea.includes(item.area)) {
             return <ListItem item={item} handlePress={handlePress} />;
           } else {
@@ -259,7 +264,6 @@ export default function Cart() {
           }
         }}
       />
-      {console.log("---------------------XXX")}
     </View>
   );
 }
