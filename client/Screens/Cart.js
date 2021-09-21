@@ -69,12 +69,10 @@ export default function Cart() {
 
       //If areaArea, which contains the contents for each area, is not empty
       if (!areaArray.length) {
-        //Add location in store to array
+  
         areaArray.push({
           area: location,
-          //TODO: Add total items
           itemChecked: element.checked,
-
           itemCheckedCount: 0,
           data: [
             {
@@ -242,7 +240,6 @@ export default function Cart() {
         sections={CART}
         keyExtractor={(item, index) => item + index}
         renderSectionHeader={({ section }) => {
-          // Section is the in store location header
           return (
             <View style={styles.container}>
               <Text style={styles.sectionHeader}>{section.area}</Text>
@@ -256,7 +253,6 @@ export default function Cart() {
           );
         }}
         renderItem={({ item }) => {
-          //Item is each individual item within a location within the store
           if (!item.checked || toggleChecked.currentArea.includes(item.area)) {
             return <ListItem item={item} handlePress={handlePress} />;
           } else {

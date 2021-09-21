@@ -41,7 +41,10 @@ export default function HomeScreen({ navigation }) {
     <Screen>
       <View>
         <AppButton title="Cart" onPress={() => navigation.navigate("Cart")} />
-        <AppButton title="Recipe" />
+        <AppButton
+          title="Recipe"
+          onPress={() => navigation.navigate("Recipe")}
+        />
         <AppButton title="history" />
       </View>
     </Screen>
