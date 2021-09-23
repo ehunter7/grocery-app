@@ -1,57 +1,49 @@
-import React from 'react'
-import { StyleSheet, FlatList, Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import {
+  StyleSheet,
+  FlatList,
+  Text,
+  View,
+  TouchableOpacity,
+} from 'react-native'
+import { Ionicons } from '@expo/vector-icons'
 
-import colors from '../config/colors';
+import colors from '../config/colors'
 
-export default function RecipeList() {
-    const recipes = [
-        {
-          name: "Dirty Rice",
-          image: "blue",
-        },
-        {
-          name: "Fried Rice",
-          image: "yellow",
-        },
-        {
-          name: "buff wings",
-          image: "red",
-        },
-        {
-          name: "noods",
-          image: "white",
-        },
-        {
-          name: "Pizza tika",
-          image: "green",
-        },
-        {
-          name: "chika peas",
-          image: "orange",
-        },
-      ];
-
-      function renderItem({ item }) {
-        return (
-          <View style={styles.listItem}>
-            <View style={styles.image} />
-            <Text>{item.name}</Text>
-          </View>
-        );
-      }
-
+export default function RecipeList({ starRecipe, recipeList }) {
+  function renderItem({ item }) {
     return (
-       <View style={styles.content}>
-        <FlatList
-          data={recipes}
-          keyExtractor={(item) => item.name}
-          renderItem={renderItem}
-        />
-      </View>
+      <TouchableOpacity>
+        <View style={styles.listItem}>
+          <View style={styles.image} />
+          <View style={styles.listText}>
+            <Text>{item.name}</Text>
+            <TouchableOpacity onPress={() => starRecipe(item)}>
+              {item.star ? (
+                <Ionicons name="star" size={24} color="gold" />
+              ) : (
+                <Ionicons name="star-outline" size={24} color="black" />
+              )}
+            </TouchableOpacity>
+          </View>
+        </View>
+      </TouchableOpacity>
     )
+  }
+
+  return (
+    <View style={styles.content}>
+      <FlatList
+        data={recipeList}
+        keyExtractor={(item) => item.name}
+        renderItem={renderItem}
+      />
+    </View>
+  )
 }
 
-const styles = StyleSheet.create({  content: {
+const styles = StyleSheet.create({
+  content: {
     flex: 1,
   },
 
@@ -62,7 +54,15 @@ const styles = StyleSheet.create({  content: {
   },
   listItem: {
     flex: 1,
-    flexDirection: "row",
-    width: "100%",
+    flexDirection: 'row',
+    width: '100%',
     marginBottom: 5,
-  },})
+  },
+  listText: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    marginLeft: 15,
+  },
+})
