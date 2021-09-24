@@ -10,10 +10,14 @@ import { Ionicons } from '@expo/vector-icons'
 
 import colors from '../config/colors'
 
-export default function RecipeList({ starRecipe, recipeList }) {
+export default function RecipeList({
+  starRecipe,
+  recipeList,
+  handleGetRecipe,
+}) {
   function renderItem({ item }) {
     return (
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => handleGetRecipe(item)}>
         <View style={styles.listItem}>
           <View style={styles.image} />
           <View style={styles.listText}>
@@ -35,7 +39,7 @@ export default function RecipeList({ starRecipe, recipeList }) {
     <View style={styles.content}>
       <FlatList
         data={recipeList}
-        keyExtractor={(item) => item.name}
+        keyExtractor={(item, index) => item + index}
         renderItem={renderItem}
       />
     </View>

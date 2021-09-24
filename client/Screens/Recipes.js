@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import RecipeHeader from "../components/RecipeHeader";
 import Layout from "../components/Layout";
 import RecipeList from "../components/RecipeList";
 import RecipeGrid from "../components/RecipeGrid";
+import RecipeCard from "./RecipeCard";
+import SearchBar from "../components/SearchBar";
 
-export default function Recipes() {
+export default function Recipes({ navigation }) {
   const [recipeList, setRecipeList] = useState([]);
+  const [layout, setLayout] = useState("grid");
+  const [searchBar, setSearchBar] = useState(false);
 
   const recipes = [
     {
@@ -135,12 +139,46 @@ export default function Recipes() {
     setRecipeList(updateRecipes);
   }
 
+  function handleGetRecipe(data) {
+    navigation.navigate("RecipeDetails", {
+      recipe: { name: data.name, image: data.image },
+    });
+  }
+
+  function handleLayout(name) {
+    switch (name) {
+      case "search":
+        setSearchBar(true);
+        break;
+      case "star":
+        //will filter by starred recipes
+        break;
+      default:
+        setLayout(name);
+        break;
+    }
+  }
+
   return (
     <>
       <RecipeHeader />
-      <Layout />
-      {/* <RecipeList starRecipe={starRecipe} recipeList={recipeList} /> */}
-      <RecipeGrid recipeList={recipeList} />
+      <View style={{ flex: 0.45 }}>
+        {searchBar ? <SearchBar /> : <Layout handleLayout={handleLayout} />}
+      </View>
+      <View style={{ flexGrow: 3 }}>
+        {layout !== "grid" ? (
+          <RecipeList
+            starRecipe={starRecipe}
+            recipeList={recipeList}
+            handleGetRecipe={handleGetRecipe}
+          />
+        ) : (
+          <RecipeGrid
+            recipeList={recipeList}
+            handleGetRecipe={handleGetRecipe}
+          />
+        )}
+      </View>
     </>
   );
 }

@@ -6,20 +6,40 @@ import { Ionicons } from '@expo/vector-icons'
 
 import colors from '../config/colors'
 
-export default function Layout() {
+export default function Layout({ handleLayout }) {
   return (
     <View style={styles.layout}>
       <TouchableOpacity>
-        <MaterialCommunityIcons name="grid" size={32} color="black" />
+        <MaterialCommunityIcons
+          onPress={() => handleLayout('grid')}
+          name="grid"
+          size={32}
+          color="black"
+        />
       </TouchableOpacity>
       <TouchableOpacity>
-        <FontAwesome name="th-list" size={32} color="black" />
+        <FontAwesome
+          onPress={() => handleLayout('stack')}
+          name="th-list"
+          size={32}
+          color="black"
+        />
       </TouchableOpacity>
       <TouchableOpacity>
-        <Ionicons name="star-outline" size={32} color="black" />
+        <Ionicons
+          onPress={() => handleLayout('star')}
+          name="star-outline"
+          size={32}
+          color="black"
+        />
       </TouchableOpacity>
       <TouchableOpacity>
-        <Ionicons name="md-search" size={32} color="black" />
+        <Ionicons
+          onPress={() => handleLayout('search')}
+          name="md-search"
+          size={32}
+          color="black"
+        />
       </TouchableOpacity>
     </View>
   )

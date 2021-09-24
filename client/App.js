@@ -7,15 +7,21 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Cart from "./Screens/Cart";
 import Recipes from "./Screens/Recipes";
+import RecipeCard from "./Screens/RecipeCard";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" options={{header: () => null}} component={HomeScreen} />
+        <Stack.Screen
+          name="Home"
+          options={{ header: () => null }}
+          component={HomeScreen}
+        />
         <Stack.Screen name="Cart" component={Cart} />
         <Stack.Screen name="Recipe" component={Recipes} />
+        <Stack.Screen name="RecipeDetails" component={RecipeCard} />
       </Stack.Navigator>
     </NavigationContainer>
   );
