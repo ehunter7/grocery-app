@@ -7,6 +7,7 @@ import {
   TextInput,
   TouchableOpacity,
   SafeAreaView,
+  Image,
 } from "react-native";
 import AppButton from "../components/AppButton";
 import { useHistory } from "react-router-dom";
@@ -38,8 +39,15 @@ export default function HomeScreen({ navigation }) {
   }
 
   return (
-    <Screen>
-      <View>
+    // <Screen>
+    <>
+      <View style={{ ...StyleSheet.absoluteFill }}>
+        <Image
+          source={require("../assets/phil-aicken-o3Qcn8dptnE-unsplash.jpg")}
+          style={{ flex: 1, width: null, height: null }}
+        />
+      </View>
+      <View style={{ flex: 1, justifyContent: "flex-end" }}>
         <AppButton title="Cart" onPress={() => navigation.navigate("Cart")} />
         <AppButton
           title="Recipe"
@@ -47,7 +55,8 @@ export default function HomeScreen({ navigation }) {
         />
         <AppButton title="history" />
       </View>
-    </Screen>
+    </>
+    //</Screen>
   );
 }
 
