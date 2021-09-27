@@ -47,13 +47,23 @@ export default function HomeScreen({ navigation }) {
           style={{ flex: 1, width: null, height: null }}
         />
       </View>
-      <View style={{ flex: 1, justifyContent: "flex-end" }}>
-        <AppButton title="Cart" onPress={() => navigation.navigate("Cart")} />
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "flex-end",
+          marginVertical: 100,
+          alignItems: "center",
+        }}
+      >
+        <AppButton
+          title="Cart"
+          textColor="transparent"
+          onPress={() => navigation.navigate("Cart")}
+        />
         <AppButton
           title="Recipe"
           onPress={() => navigation.navigate("Recipe")}
         />
-        <AppButton title="history" />
       </View>
     </>
     //</Screen>

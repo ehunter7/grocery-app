@@ -17,7 +17,7 @@ export default function Recipes({ navigation }) {
     {
       name: "Dirty Rice",
       image: "blue",
-      star: false,
+      star: true,
     },
     {
       name: "Fried Rice",
@@ -67,7 +67,7 @@ export default function Recipes({ navigation }) {
     {
       name: "Pizza tika",
       image: "green",
-      star: false,
+      star: true,
     },
     {
       name: "chika peas",
@@ -152,6 +152,7 @@ export default function Recipes({ navigation }) {
         break;
       case "star":
         //will filter by starred recipes
+        handleFilter();
         break;
       default:
         setLayout(name);
@@ -159,11 +160,33 @@ export default function Recipes({ navigation }) {
     }
   }
 
+  function handleFilter() {
+    const filteredRecipes = recipeList.filter((item) => item.star === true);
+    setRecipeList(filteredRecipes);
+  }
+
+  function handleSearch(input) {
+    var searchRecipes;
+    if (input !== "") {
+      searchRecipes = recipes.filter((item) => {
+        return (item.name.toLowerCase() + "").includes(input.toLowerCase());
+      });
+    } else {
+      searchRecipes = recipes;
+    }
+
+    setRecipeList(searchRecipes);
+  }
+
   return (
     <>
       <RecipeHeader />
       <View style={{ flex: 0.45 }}>
-        {searchBar ? <SearchBar /> : <Layout handleLayout={handleLayout} />}
+        {searchBar ? (
+          <SearchBar handleSearch={handleSearch} />
+        ) : (
+          <Layout handleLayout={handleLayout} />
+        )}
       </View>
       <View style={{ flexGrow: 3 }}>
         {layout !== "grid" ? (
