@@ -58,7 +58,9 @@ export default function HomeScreen({ navigation }) {
         <AppButton
           title="Cart"
           textColor="transparent"
-          onPress={() => navigation.navigate("Cart")}
+          onPress={() => {
+            navigation.navigate("Cart");
+          }}
         />
         <AppButton
           title="Recipe"

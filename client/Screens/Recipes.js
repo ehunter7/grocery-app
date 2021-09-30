@@ -7,6 +7,7 @@ import RecipeList from "../components/RecipeList";
 import RecipeGrid from "../components/RecipeGrid";
 import RecipeCard from "./RecipeCard";
 import SearchBar from "../components/SearchBar";
+import AppTabs from "../components/AppTabs";
 
 export default function Recipes({ navigation }) {
   const [recipeList, setRecipeList] = useState([]);

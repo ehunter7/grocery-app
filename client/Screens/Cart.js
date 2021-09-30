@@ -10,6 +10,7 @@ import { FontAwesome } from "@expo/vector-icons";
 
 // Component for individual grocery list item
 import ListItem from "../components/ListItem";
+import AppTabs from "../components/AppTabs";
 
 export default function Cart() {
   //CART contains the imported grocery list
@@ -69,7 +70,6 @@ export default function Cart() {
 
       //If areaArea, which contains the contents for each area, is not empty
       if (!areaArray.length) {
-  
         areaArray.push({
           area: location,
           itemChecked: element.checked,
@@ -235,32 +235,37 @@ export default function Cart() {
   }
 
   return (
-    <View>
-      <SectionList
-        sections={CART}
-        keyExtractor={(item, index) => item + index}
-        renderSectionHeader={({ section }) => {
-          return (
-            <View style={styles.container}>
-              <Text style={styles.sectionHeader}>{section.area}</Text>
-              {section.itemCheckedCount > 0 ? (
-                <Text
-                  style={styles.itemsDown}
-                >{`${section.itemCheckedCount} Down`}</Text>
-              ) : null}
-              {areaDropDown(section)}
-            </View>
-          );
-        }}
-        renderItem={({ item }) => {
-          if (!item.checked || toggleChecked.currentArea.includes(item.area)) {
-            return <ListItem item={item} handlePress={handlePress} />;
-          } else {
-            return null;
-          }
-        }}
-      />
-    </View>
+    <>
+      <View>
+        <SectionList
+          sections={CART}
+          keyExtractor={(item, index) => item + index}
+          renderSectionHeader={({ section }) => {
+            return (
+              <View style={styles.container}>
+                <Text style={styles.sectionHeader}>{section.area}</Text>
+                {section.itemCheckedCount > 0 ? (
+                  <Text
+                    style={styles.itemsDown}
+                  >{`${section.itemCheckedCount} Down`}</Text>
+                ) : null}
+                {areaDropDown(section)}
+              </View>
+            );
+          }}
+          renderItem={({ item }) => {
+            if (
+              !item.checked ||
+              toggleChecked.currentArea.includes(item.area)
+            ) {
+              return <ListItem item={item} handlePress={handlePress} />;
+            } else {
+              return null;
+            }
+          }}
+        />
+      </View>
+    </>
   );
 }
 
