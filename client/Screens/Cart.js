@@ -11,6 +11,8 @@ import { FontAwesome } from "@expo/vector-icons";
 // Component for individual grocery list item
 import ListItem from "../components/ListItem";
 import AppTabs from "../components/AppTabs";
+import Screen from "../components/Screen";
+import AppButton from "../components/AppButton";
 
 export default function Cart() {
   //CART contains the imported grocery list
@@ -236,7 +238,17 @@ export default function Cart() {
 
   return (
     <>
-      <View>
+      <View style={{ marginTop: 55 }}>
+        <View style={{ alignItems: "center" }}>
+          <Text
+            style={{
+              fontSize: 20,
+              fontWeight: "900",
+            }}
+          >
+            Grocery List
+          </Text>
+        </View>
         <SectionList
           sections={CART}
           keyExtractor={(item, index) => item + index}
@@ -264,6 +276,11 @@ export default function Cart() {
             }
           }}
         />
+      </View>
+      <View
+        style={{ flex: 1, justifyContent: "flex-end", alignItems: "center" }}
+      >
+        <AppButton title="Add Item" />
       </View>
     </>
   );
