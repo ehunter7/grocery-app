@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   View,
+  TextInput,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 
@@ -15,6 +16,16 @@ import Screen from "../components/Screen";
 import AppButton from "../components/AppButton";
 
 export default function Cart() {
+  // state for new item being added
+  const [newItem, setNewItem] = useState({
+    name: "",
+    checked: false,
+    location: "Other",
+  });
+
+  //state for new  item input field
+  const [newItemInputField, setNewItemInputField] = useState(false);
+
   //CART contains the imported grocery list
   const [CART, setCart] = useState([]);
 
@@ -26,8 +37,6 @@ export default function Cart() {
     area: [],
     hidden: true,
   });
-
-  // const [curArea, setCurArea] = useState("");
 
   //cartItems used for development
   const cartItems = [
@@ -57,6 +66,10 @@ export default function Cart() {
       area: "refrigerator",
     },
   ];
+
+  function addItem() {
+    setNewItemInputField(!newItemInputField);
+  }
 
   useEffect(() => {
     let areaArray = [];
@@ -149,7 +162,7 @@ export default function Cart() {
         if (e.checked) {
           //If item is being unchecked, decrement count
           count = item.itemCheckedCount - 1;
-          console.log("toggleChecked.area", toggleChecked.area);
+          // console.log("toggleChecked.area", toggleChecked.area);
           setToggleChecked({
             ...toggleChecked,
             area: toggleChecked.area.splice(
@@ -160,7 +173,7 @@ export default function Cart() {
           console.log("toggleChecked.area [after]", toggleChecked.area);
 
           //TODO: Need to figure out why i called this here
-          console.log("e", e);
+          // console.log("e", e);
           areaDropDown(e);
         } else {
           //item was not checked
@@ -219,7 +232,7 @@ export default function Cart() {
 
     //If current area in iteration is in area that has item checked off and no items have been checked off
     // && section.itemCheckedCount > 0
-    console.log("toggleChecked.area", toggleChecked.area);
+    // console.log("toggleChecked.area", toggleChecked.area);
     if (toggleChecked.area.includes(section.area)) {
       return (
         <Text style={styles.dropdown} onPress={() => handleDropDown(section)}>
@@ -233,6 +246,15 @@ export default function Cart() {
       );
     } else {
       return null;
+    }
+  }
+
+  function handleNewItemInput() {
+    if (newItem.name !== "") {
+      cartItems.push(newItem);
+      console.log("item Entered");
+    } else {
+      console.log("No item entrered");
     }
   }
 
@@ -280,7 +302,42 @@ export default function Cart() {
       <View
         style={{ flex: 1, justifyContent: "flex-end", alignItems: "center" }}
       >
-        <AppButton title="Add Item" />
+        {!newItemInputField ? (
+          <AppButton onPress={() => addItem()} title="Add Item" />
+        ) : (
+          <>
+            <View style={{ flexDirection: "row" }}>
+              <View>
+                <Text>Item Name</Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={(text) => {
+                    setNewItem({ ...newItem, name: text });
+                  }}
+                  value={newItem.name}
+                  placeholder="and then..."
+                  keyboardType="default"
+                  clearButtonMode="always"
+                />
+                <Text>Location</Text>
+                <TextInput
+                  style={styles.input}
+                  onChangeText={(text) => {
+                    setNewItem({ ...newItem, location: text });
+                  }}
+                  value={newItem.location}
+                  placeholder="and then..."
+                  keyboardType="default"
+                  clearButtonMode="always"
+                />
+              </View>
+              <Text onPress={() => setNewItemInputField(!newItemInputField)}>
+                X
+              </Text>
+            </View>
+            <AppButton onPress={handleNewItemInput} title="submit" />
+          </>
+        )}
       </View>
     </>
   );
@@ -310,5 +367,13 @@ const styles = StyleSheet.create({
     paddingTop: 12,
     fontSize: 10,
     fontStyle: "italic",
+  },
+  input: {
+    width: "90%",
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    borderRadius: 50,
+    padding: 10,
   },
 });

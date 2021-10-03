@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Ionicons } from '@expo/vector-icons'
 import Cart from '../Screens/Cart'
 import Recipes from '../Screens/Recipes'
+import RecipeCard from '../Screens/RecipeCard'
 
 const Tab = createBottomTabNavigator()
 
