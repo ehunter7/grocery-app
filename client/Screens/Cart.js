@@ -20,7 +20,7 @@ export default function Cart() {
   const [newItem, setNewItem] = useState({
     name: "",
     checked: false,
-    location: "Other",
+    area: "Other",
   });
 
   //state for new  item input field
@@ -72,6 +72,10 @@ export default function Cart() {
   }
 
   useEffect(() => {
+    setArray();
+  }, []); // run on Mount
+
+  function setArray() {
     let areaArray = [];
 
     //Iterates through the hard coded cartItems to transfer to new array
@@ -135,16 +139,19 @@ export default function Cart() {
 
     //reset temp array
     areaArray = [];
-  }, []); // run on Mount
+  }
 
   //handles when user checks off item on list
   //Passes in e which is the item being checked off
   function handlePress(e) {
+    // console.log("---------------------pressed!----", CART);
+
     //TODO: need to change variable e to something more descriptive
     //UpdatedCART contains modified list after item is checked off list
     const updatedCART = CART.map((item) => {
-      //Finds the item that has been checked off in the list and shanges its "Checked" status
+      //Finds the item that has been checked off in the list and changes its "Checked" status
       const newItem = item.data.map((item) => {
+        //! Should have used another variable other than item due to it being used for first map
         if (item.name === e.name) {
           //When item is found in array set checked value
           return { ...item, checked: !item.checked };
@@ -158,36 +165,48 @@ export default function Cart() {
         //Used to track how many items have been chekced off.
         let count;
 
-        // If item is already checked off and user is unchecking it, remove the area from tthe areaArray
+        // If item is already checked off and user is unchecking it, remove the area from the areaArray
         if (e.checked) {
           //If item is being unchecked, decrement count
           count = item.itemCheckedCount - 1;
-          // console.log("toggleChecked.area", toggleChecked.area);
+          var token = true;
+          const newData = toggleChecked.area.filter((item) => {
+            if (item === e.area && token) {
+              token = false;
+              return null;
+            }
+            return item;
+          });
           setToggleChecked({
             ...toggleChecked,
-            area: toggleChecked.area.splice(
-              toggleChecked.area.indexOf(e.area),
-              1
-            ),
+            area: newData,
+            //  toggleChecked.area.splice(
+            //   //Splice will remove the location from the string
+            //   toggleChecked.area.indexOf(e.area), // Index of indicates which index the area is at in the array
+            //   1 // 1 is used to within splice to tell how many elements to remove
+            // ),
           });
-          console.log("toggleChecked.area [after]", toggleChecked.area);
 
           //TODO: Need to figure out why i called this here
+          //? I really dont think i need this here, it doesnt seem to be helping.
           // console.log("e", e);
-          areaDropDown(e);
+          // areaDropDown(e);
         } else {
           //item was not checked
           //If item is being chekced off, increment count
           count = item.itemCheckedCount + 1;
 
+          const newData = toggleChecked.area.concat(e.area);
+          console.log(`----newdata-----`, newData);
           setToggleChecked({
             ...toggleChecked,
-            area: toggleChecked.area.concat(e.area),
+            area: newData,
           });
-        }
+        } //End of checked or unchecked check, still within area
 
         //If there is an item checked in locations list, set checked to true otherwise set to false
         let checked = count > 0;
+
         return {
           ...item,
           itemChecked: checked,
@@ -198,9 +217,9 @@ export default function Cart() {
         return { ...item, data: newItem };
       }
     }); //End of updatedCART .map method
-
     //sets the grocery list state to new updated list
     setCart(updatedCART);
+    // console.log("toggled------------", toggleChecked);
   }
 
   // Handles drop down arrow press, used for displaying checked off items
@@ -227,12 +246,9 @@ export default function Cart() {
   //TODO: this needs to be an individual component
   //Generates location drop down icon, function runs for every location in list
   function areaDropDown(section) {
-    //declares variable to pass to hadleDropdown, //!Should be declared in handleDropdown
-    //TODO: Move variable curArea to handleDropdown
-
     //If current area in iteration is in area that has item checked off and no items have been checked off
     // && section.itemCheckedCount > 0
-    // console.log("toggleChecked.area", toggleChecked.area);
+    // console.log("WTF! BRO...", toggleChecked);
     if (toggleChecked.area.includes(section.area)) {
       return (
         <Text style={styles.dropdown} onPress={() => handleDropDown(section)}>
@@ -252,7 +268,7 @@ export default function Cart() {
   function handleNewItemInput() {
     if (newItem.name !== "") {
       cartItems.push(newItem);
-      console.log("item Entered");
+      setArray();
     } else {
       console.log("No item entrered");
     }
@@ -325,7 +341,7 @@ export default function Cart() {
                   onChangeText={(text) => {
                     setNewItem({ ...newItem, location: text });
                   }}
-                  value={newItem.location}
+                  value={newItem.area}
                   placeholder="and then..."
                   keyboardType="default"
                   clearButtonMode="always"
