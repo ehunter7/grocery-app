@@ -6,8 +6,12 @@ import {
   Text,
   View,
   TextInput,
+  Dimensions,
+  TouchableOpacity,
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Component for individual grocery list item
 import ListItem from "../components/ListItem";
@@ -20,7 +24,7 @@ export default function Cart() {
   const [newItem, setNewItem] = useState({
     name: "",
     checked: false,
-    area: "Other",
+    area: "",
   });
 
   //state for new  item input field
@@ -197,7 +201,6 @@ export default function Cart() {
           count = item.itemCheckedCount + 1;
 
           const newData = toggleChecked.area.concat(e.area);
-          console.log(`----newdata-----`, newData);
           setToggleChecked({
             ...toggleChecked,
             area: newData,
@@ -277,16 +280,66 @@ export default function Cart() {
   return (
     <>
       <View style={{ marginTop: 55 }}>
-        <View style={{ alignItems: "center" }}>
+        <View
+          style={{
+            alignItems: "center",
+            flexDirection: "row",
+            justifyContent: "flex-end",
+            marginRight: 15,
+          }}
+        >
           <Text
             style={{
               fontSize: 20,
               fontWeight: "900",
+              marginRight: 100, //TODO: need to try harder
             }}
           >
             Grocery List
           </Text>
+          <TouchableOpacity>
+            <Ionicons
+              onPress={() => addItem()}
+              name="add"
+              size={24}
+              color="black"
+            />
+          </TouchableOpacity>
         </View>
+        {!newItemInputField ? null : (
+          <>
+            <View style={{ flexDirection: "row", marginTop: 15 }}>
+              <TextInput
+                style={styles.input}
+                onChangeText={(text) => {
+                  setNewItem({ ...newItem, name: text });
+                }}
+                value={newItem.name}
+                placeholder="Item name..."
+                keyboardType="default"
+                clearButtonMode="always"
+              />
+
+              <TextInput
+                style={styles.input}
+                onChangeText={(text) => {
+                  setNewItem({ ...newItem, location: text });
+                }}
+                value={newItem.area}
+                placeholder="location in store..."
+                keyboardType="default"
+                clearButtonMode="always"
+              />
+              <MaterialCommunityIcons
+                style={{ marginTop: 5, marginLeft: 8 }}
+                name="cart-arrow-down"
+                size={24}
+                color="black"
+                onPress={handleNewItemInput}
+              />
+            </View>
+          </>
+        )}
         <SectionList
           sections={CART}
           keyExtractor={(item, index) => item + index}
@@ -317,47 +370,11 @@ export default function Cart() {
       </View>
       <View
         style={{ flex: 1, justifyContent: "flex-end", alignItems: "center" }}
-      >
-        {!newItemInputField ? (
-          <AppButton onPress={() => addItem()} title="Add Item" />
-        ) : (
-          <>
-            <View style={{ flexDirection: "row" }}>
-              <View>
-                <Text>Item Name</Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={(text) => {
-                    setNewItem({ ...newItem, name: text });
-                  }}
-                  value={newItem.name}
-                  placeholder="and then..."
-                  keyboardType="default"
-                  clearButtonMode="always"
-                />
-                <Text>Location</Text>
-                <TextInput
-                  style={styles.input}
-                  onChangeText={(text) => {
-                    setNewItem({ ...newItem, location: text });
-                  }}
-                  value={newItem.area}
-                  placeholder="and then..."
-                  keyboardType="default"
-                  clearButtonMode="always"
-                />
-              </View>
-              <Text onPress={() => setNewItemInputField(!newItemInputField)}>
-                X
-              </Text>
-            </View>
-            <AppButton onPress={handleNewItemInput} title="submit" />
-          </>
-        )}
-      </View>
+      ></View>
     </>
   );
 }
+var { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
@@ -385,11 +402,12 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
   },
   input: {
-    width: "90%",
-    height: 40,
-    margin: 12,
+    width: "43.5%",
+    height: 35,
+    // margin: 12,
     borderWidth: 1,
     borderRadius: 50,
-    padding: 10,
+    paddingLeft: 10,
+    marginLeft: 2,
   },
 });
