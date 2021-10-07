@@ -130,8 +130,7 @@ export default function Recipes({ navigation }) {
 
   //Sets datas starred attribute to true or false
   function starRecipe(item) {
-    //TODO: star is deselected when another star is pressed
-    const updateRecipes = recipes.map((recipe) => {
+    const updateRecipes = recipeList.map((recipe) => {
       if (item.name === recipe.name) {
         return { ...recipe, star: !recipe.star };
       }

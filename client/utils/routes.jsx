@@ -24,15 +24,23 @@ export default function routes() {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName="Home"
-        screenOptions={{ headerShown: false }}
+        // screenOptions={{ headerShown: false }}
       >
         <Stack.Screen
           name="Home"
           options={{ header: () => null }}
           component={HomeScreen}
         />
-        <Stack.Screen name="Cart" component={CartTabs} />
-        <Stack.Screen name="Recipe" component={RecipeTabs} />
+        <Stack.Screen
+          name="Cart"
+          component={CartTabs}
+          options={{ header: () => null }}
+        />
+        <Stack.Screen
+          name="Recipe"
+          component={RecipeTabs}
+          options={{ header: () => null }}
+        />
         <Stack.Screen name="RecipeDetails" component={RecipeCard} />
       </Stack.Navigator>
     </NavigationContainer>

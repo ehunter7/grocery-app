@@ -148,9 +148,8 @@ export default function Cart() {
   //handles when user checks off item on list
   //Passes in e which is the item being checked off
   function handlePress(e) {
-    // console.log("---------------------pressed!----", CART);
-
     //TODO: need to change variable e to something more descriptive
+
     //UpdatedCART contains modified list after item is checked off list
     const updatedCART = CART.map((item) => {
       //Finds the item that has been checked off in the list and changes its "Checked" status
@@ -184,17 +183,7 @@ export default function Cart() {
           setToggleChecked({
             ...toggleChecked,
             area: newData,
-            //  toggleChecked.area.splice(
-            //   //Splice will remove the location from the string
-            //   toggleChecked.area.indexOf(e.area), // Index of indicates which index the area is at in the array
-            //   1 // 1 is used to within splice to tell how many elements to remove
-            // ),
           });
-
-          //TODO: Need to figure out why i called this here
-          //? I really dont think i need this here, it doesnt seem to be helping.
-          // console.log("e", e);
-          // areaDropDown(e);
         } else {
           //item was not checked
           //If item is being chekced off, increment count
@@ -222,7 +211,6 @@ export default function Cart() {
     }); //End of updatedCART .map method
     //sets the grocery list state to new updated list
     setCart(updatedCART);
-    // console.log("toggled------------", toggleChecked);
   }
 
   // Handles drop down arrow press, used for displaying checked off items
