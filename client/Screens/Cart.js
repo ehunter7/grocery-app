@@ -307,11 +307,11 @@ export default function Cart() {
                 keyboardType="default"
                 clearButtonMode="always"
               />
-
+              {/* New item location input */}
               <TextInput
                 style={styles.input}
                 onChangeText={(text) => {
-                  setNewItem({ ...newItem, location: text });
+                  setNewItem({ ...newItem, area: text });
                 }}
                 value={newItem.area}
                 placeholder="location in store..."
@@ -323,7 +323,10 @@ export default function Cart() {
                 name="cart-arrow-down"
                 size={24}
                 color="black"
-                onPress={handleNewItemInput}
+                onPress={() => {
+                  handleNewItemInput();
+                  setNewItem({ name: "", area: "" });
+                }}
               />
             </View>
           </>
