@@ -14,15 +14,20 @@ import { useHistory } from "react-router-dom";
 import Screen from "../components/Screen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import API from "../utils/api";
 
 export default function HomeScreen({ navigation }) {
   let history = useHistory();
 
-  useEffect(() => {
-    fetch("http://10.201.1.76:3000/get")
-      .then((res) => res.json())
-      .then((res) => console.log(res.theServer));
-  }, []);
+  function hitRoute() {
+    console.log("button pressed!");
+    // fetch("http://10.201.1.76:3000/items")
+    //   .then((res) => res.json())
+    //   .then((res) => console.log(res.theServer));
+    API.getItems().then((res) => {
+      console.log(res.data.theServer);
+    });
+  }
 
   async function handleSubmit() {
     console.log("presed");
@@ -66,6 +71,7 @@ export default function HomeScreen({ navigation }) {
           title="Recipe"
           onPress={() => navigation.navigate("Recipe")}
         />
+        <AppButton title="ReBackend" onPress={hitRoute} />
       </View>
     </>
     //</Screen>

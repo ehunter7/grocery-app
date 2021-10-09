@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export default {
-  firstRequest: () => {
-    return axios.get("/get");
+  getItems: () => {
+    return axios.get("http://10.201.1.76:3000/api/cart/items");
   },
 };
