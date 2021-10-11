@@ -7,7 +7,8 @@ const reducer = (state, action) => {
   switch (action.type) {
     case 'set-cart-items':
       return { ...state, cartItems: action.payload }
-
+    case 'add-item':
+      return { ...state, cartItems: state.cartItems.concat(action.payload) }
     default:
       break
   }

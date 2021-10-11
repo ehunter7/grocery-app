@@ -46,42 +46,13 @@ export default function Cart() {
 
   const [state, dispatch] = useStateContext();
 
-  //cartItems used for development
-  // const cartItems = [
-  //   {
-  //     name: "Milk",
-  //     checked: false,
-  //     area: "Refrigerator",
-  //   },
-  //   {
-  //     name: "Eggs",
-  //     checked: false,
-  //     area: "Refrigerator",
-  //   },
-  //   {
-  //     name: "Pizza",
-  //     checked: false,
-  //     area: "Frozen",
-  //   },
-  //   {
-  //     name: "Bread",
-  //     checked: false,
-  //     area: "Pantry",
-  //   },
-  //   {
-  //     name: "Bell Pepper",
-  //     checked: false,
-  //     area: "refrigerator",
-  //   },
-  // ];
-
   function addItem() {
     setNewItemInputField(!newItemInputField);
   }
 
   useEffect(() => {
     setArray();
-  }, []); // run on Mount
+  }, [state]); // run on Mount
 
   function setArray() {
     let areaArray = [];
@@ -262,10 +233,9 @@ export default function Cart() {
   function handleNewItemInput() {
     if (newItem.name !== "" && newItem.area !== "") {
       API.AddItem(newItem).then((res) => {
-        console.log(res);
+        dispatch({ type: "add-item", payload: res.data });
+        setArray();
       });
-      // cartItems.push(newItem);
-      // setArray();
     } else {
       console.log("No item entrered");
     }
