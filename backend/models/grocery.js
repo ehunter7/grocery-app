@@ -3,8 +3,9 @@ const Schema = mongoose.Schema;
 
 const GroceryItem = new Schema({
   name: String,
+  checked: false,
   area: String,
 });
 
-const GroceryItem = mongoose.model("groceryitem", GroceryItem);
-module.exports = GroceryItem;
+const CartItem = mongoose.model("groceryitem", GroceryItem);
+module.exports = CartItem;

@@ -18,6 +18,8 @@ import ListItem from "../components/ListItem";
 import AppTabs from "../components/AppTabs";
 import Screen from "../components/Screen";
 import AppButton from "../components/AppButton";
+import API from "../utils/api";
+import { useStateContext } from "../utils/GlobalState";
 
 export default function Cart() {
   // state for new item being added
@@ -42,34 +44,36 @@ export default function Cart() {
     hidden: true,
   });
 
+  const [state, dispatch] = useStateContext();
+
   //cartItems used for development
-  const cartItems = [
-    {
-      name: "Milk",
-      checked: false,
-      area: "Refrigerator",
-    },
-    {
-      name: "Eggs",
-      checked: false,
-      area: "Refrigerator",
-    },
-    {
-      name: "Pizza",
-      checked: false,
-      area: "Frozen",
-    },
-    {
-      name: "Bread",
-      checked: false,
-      area: "Pantry",
-    },
-    {
-      name: "Bell Pepper",
-      checked: false,
-      area: "refrigerator",
-    },
-  ];
+  // const cartItems = [
+  //   {
+  //     name: "Milk",
+  //     checked: false,
+  //     area: "Refrigerator",
+  //   },
+  //   {
+  //     name: "Eggs",
+  //     checked: false,
+  //     area: "Refrigerator",
+  //   },
+  //   {
+  //     name: "Pizza",
+  //     checked: false,
+  //     area: "Frozen",
+  //   },
+  //   {
+  //     name: "Bread",
+  //     checked: false,
+  //     area: "Pantry",
+  //   },
+  //   {
+  //     name: "Bell Pepper",
+  //     checked: false,
+  //     area: "refrigerator",
+  //   },
+  // ];
 
   function addItem() {
     setNewItemInputField(!newItemInputField);
@@ -81,9 +85,8 @@ export default function Cart() {
 
   function setArray() {
     let areaArray = [];
-
     //Iterates through the hard coded cartItems to transfer to new array
-    cartItems.forEach((element, index) => {
+    state.cartItems.forEach((element, index) => {
       //Capitalize the first letter of the location
       const location =
         element.area.charAt(0).toUpperCase() + element.area.slice(1);
@@ -257,9 +260,12 @@ export default function Cart() {
   }
 
   function handleNewItemInput() {
-    if (newItem.name !== "") {
-      cartItems.push(newItem);
-      setArray();
+    if (newItem.name !== "" && newItem.area !== "") {
+      API.AddItem(newItem).then((res) => {
+        console.log(res);
+      });
+      // cartItems.push(newItem);
+      // setArray();
     } else {
       console.log("No item entrered");
     }

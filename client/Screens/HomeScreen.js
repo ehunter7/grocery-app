@@ -15,33 +15,19 @@ import Screen from "../components/Screen";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import API from "../utils/api";
+import { useStateContext } from "../utils/GlobalState";
 
 export default function HomeScreen({ navigation }) {
+  const [state, dispatch] = useStateContext();
+
   let history = useHistory();
+  // const [cartItems, setCartItems] = useState({});
 
-  function hitRoute() {
-    console.log("button pressed!");
-    // fetch("http://10.201.1.76:3000/items")
-    //   .then((res) => res.json())
-    //   .then((res) => console.log(res.theServer));
-    API.getItems().then((res) => {
-      console.log(res.data.theServer);
+  useEffect(() => {
+    API.getCartItems().then((res) => {
+      dispatch({ type: "set-cart-items", payload: res.data });
     });
-  }
-
-  async function handleSubmit() {
-    console.log("presed");
-    const response = await fetch("http://10.201.1.76:3000/wow/post", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(inputState),
-    });
-    const body = await response.text();
-    setResponse({ responseToPost: body });
-    5;
-  }
+  }, []);
 
   return (
     // <Screen>
@@ -71,7 +57,6 @@ export default function HomeScreen({ navigation }) {
           title="Recipe"
           onPress={() => navigation.navigate("Recipe")}
         />
-        <AppButton title="ReBackend" onPress={hitRoute} />
       </View>
     </>
     //</Screen>
