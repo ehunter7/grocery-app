@@ -185,6 +185,10 @@ export default function Cart() {
     }); //End of updatedCART .map method
     //sets the grocery list state to new updated list
     setCart(updatedCART);
+    API.Checkoff(e).then((res) => {
+      console.log(res.data);
+    });
+    // dispatch({ type: "set-cart-item", payload: updatedCART });
   }
 
   // Handles drop down arrow press, used for displaying checked off items
