@@ -29,6 +29,12 @@ export default function HomeScreen({ navigation }) {
     });
   }, []);
 
+  function newFamily() {
+    API.newFamily().then((res) => {
+      console.log("Thar she blows!", res.body);
+    });
+  }
+
   return (
     // <Screen>
     <>
@@ -57,6 +63,7 @@ export default function HomeScreen({ navigation }) {
           title="Recipe"
           onPress={() => navigation.navigate("Recipe")}
         />
+        <AppButton title="Recipe" onPress={() => newFamily()} />
       </View>
     </>
     //</Screen>

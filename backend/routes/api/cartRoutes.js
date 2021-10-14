@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-//TODO need to create schema
 const Cart = require("../../models/grocery");
+const Family = require("../../models/family");
 
 // gets all items ssaved in cart
 router.get("/items", async (req, res) => {
@@ -32,4 +32,18 @@ router.post("/addItem", async (req, res) => {
   }
 });
 
+router.put("/checkoff", async (req, res) => {
+  const { name, checked } = req.body;
+  console.log(name, checked);
+  try {
+    const updatedItem = await Cart.findOneAndUpdate(
+      { name: name },
+      { checked: !checked }
+    );
+    res.json(updatedItem);
+  } catch (error) {
+    console.log("[ERROR] put('/checkoff')");
+    console.log(error);
+  }
+});
 module.exports = router;
