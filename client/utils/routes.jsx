@@ -8,6 +8,7 @@ import Cart from '../Screens/Cart'
 import Recipes from '../Screens/Recipes'
 import RecipeCard from '../Screens/RecipeCard'
 import AppTabs from '../components/AppTabs'
+import Login from '../Screens/Login'
 
 const Tab = createBottomTabNavigator()
 
@@ -23,7 +24,7 @@ export default function routes() {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Home"
+        initialRouteName="Login"
         // screenOptions={{ headerShown: false }}
       >
         <Stack.Screen
@@ -42,6 +43,7 @@ export default function routes() {
           options={{ header: () => null }}
         />
         <Stack.Screen name="RecipeDetails" component={RecipeCard} />
+        <Stack.Screen name="Login" component={Login} />
       </Stack.Navigator>
     </NavigationContainer>
   )

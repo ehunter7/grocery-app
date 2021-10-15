@@ -7,6 +7,7 @@ const FamilySchema = new Schema({
     {
       id: mongoose.Types.ObjectId,
       userName: String,
+      password: String,
       familyID: mongoose.Types.ObjectId,
       memberfamily: String,
     },
