@@ -10,7 +10,6 @@ export default function ListItem({ item, renderRightActions, handlePress }) {
       <View style={styles.container}>
         <View>
           <CheckBox
-            // disabled={false}
             checked={item.checked}
             onPress={(newValue) => {
               handlePress(item)

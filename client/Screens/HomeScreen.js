@@ -25,13 +25,14 @@ export default function HomeScreen({ navigation }) {
 
   useEffect(() => {
     API.getCartItems().then((res) => {
-      dispatch({ type: "set-cart-items", payload: res.data });
+      dispatch({ type: "set-cart-items", payload: res.data[0] });
+      // console.log("getItems line 29 of homescreen", res.data[0].cart);
     });
   }, []);
 
   function newFamily() {
     API.newFamily().then((res) => {
-      console.log("Thar she blows!", res.body);
+      console.log("Thar she blows!");
     });
   }
 

@@ -28,6 +28,5 @@ const styles = StyleSheet.create({
     padding: 15,
     width: width - 18,
     height: '70%',
-    borderWidth: 1,
   },
 })

@@ -7,26 +7,24 @@ const Family = require("../../models/family");
 // gets all items ssaved in cart
 router.get("/items", async (req, res) => {
   try {
-    const allItems = await Cart.find({});
+    const allItems = await Family.find({ familyName: "Hunters" });
     res.json(allItems);
   } catch (error) {
     console.log("[ERROR] GET ITEMS", error);
   }
 });
 
-router.post("/addItem", async (req, res) => {
-  const { name, area } = req.body;
-  console.log(name);
+router.put("/addItem", async (req, res) => {
+  console.log(req.body);
   try {
-    const item = new Cart({
-      name: name,
-      checked: false,
-      area: area,
-    });
+    const updateCart = await Family.findByIdAndUpdate(
+      "616b48cd319d2d1df802f0e4",
+      {
+        cart: req.body,
+      }
+    );
 
-    await item.save();
-    res.json(item);
-    // res.send({ theServer: "Add item has been called!@!" });
+    res.json(updateCart);
   } catch (error) {
     console.log("error with add item", error);
   }
@@ -34,13 +32,11 @@ router.post("/addItem", async (req, res) => {
 
 router.put("/checkoff", async (req, res) => {
   const { name, checked } = req.body;
-  console.log(name, checked);
   try {
-    const updatedItem = await Cart.findOneAndUpdate(
-      { name: name },
-      { checked: !checked }
-    );
-    res.json(updatedItem);
+    const updatedItem = await Family.findByIdAndUpdate({
+      _id: "616b48cd319d2d1df802f0e4",
+    });
+    // res.json(updatedItem);
   } catch (error) {
     console.log("[ERROR] put('/checkoff')");
     console.log(error);

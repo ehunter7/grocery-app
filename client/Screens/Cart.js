@@ -24,9 +24,9 @@ import { useStateContext } from "../utils/GlobalState";
 export default function Cart() {
   // state for new item being added
   const [newItem, setNewItem] = useState({
-    name: "",
-    checked: false,
-    area: "",
+    itemName: "",
+    itemChecked: false,
+    itemArea: "",
   });
 
   //state for new  item input field
@@ -60,7 +60,7 @@ export default function Cart() {
     state.cartItems.forEach((element, index) => {
       //Capitalize the first letter of the location
       const location =
-        element.area.charAt(0).toUpperCase() + element.area.slice(1);
+        element.itemArea.charAt(0).toUpperCase() + element.itemArea.slice(1);
 
       //used as a token to track if an item has been pushed to areaArray
       let pushed = false;
@@ -69,12 +69,12 @@ export default function Cart() {
       if (!areaArray.length) {
         areaArray.push({
           area: location,
-          itemChecked: element.checked,
+          itemChecked: element.itemChecked,
           itemCheckedCount: 0,
           data: [
             {
-              name: element.name,
-              checked: element.checked,
+              name: element.itemName,
+              checked: element.itemChecked,
               area: location,
             },
           ],
@@ -82,12 +82,12 @@ export default function Cart() {
       } else {
         //areaArray is not empty, check if incoming area exists in array
         areaArray.forEach((item) => {
-          if (element.area.toLowerCase() === item.area.toLowerCase()) {
+          if (element.itemArea.toLowerCase() === item.area.toLowerCase()) {
             //If location is already in array, push item to location
             item.data.push({
-              name: element.name,
+              name: element.itemName,
               //TODO: increment total items
-              checked: element.checked,
+              checked: element.itemChecked,
               area: location,
             });
             pushed = true; //Item has been added to array
@@ -97,15 +97,15 @@ export default function Cart() {
         //if area was not found, push new location to areaArray
         if (!pushed) {
           areaArray.push({
-            area: element.area,
+            area: element.itemArea,
             //TODO: Add total items
             itemChecked: element.checked,
             itemCheckedCount: 0,
             data: [
               {
-                name: element.name,
-                checked: element.checked,
-                area: element.area,
+                name: element.itemName,
+                checked: element.itemChecked,
+                area: element.itemArea,
               },
             ],
           });
@@ -185,9 +185,8 @@ export default function Cart() {
     }); //End of updatedCART .map method
     //sets the grocery list state to new updated list
     setCart(updatedCART);
-    API.Checkoff(e).then((res) => {
-      console.log(res.data);
-    });
+    API.Checkoff(e).then((res) => {});
+    console.log(res);
     // dispatch({ type: "set-cart-item", payload: updatedCART });
   }
 
@@ -217,7 +216,6 @@ export default function Cart() {
   function areaDropDown(section) {
     //If current area in iteration is in area that has item checked off and no items have been checked off
     // && section.itemCheckedCount > 0
-    // console.log("WTF! BRO...", toggleChecked);
     if (toggleChecked.area.includes(section.area)) {
       return (
         <Text style={styles.dropdown} onPress={() => handleDropDown(section)}>
@@ -236,8 +234,10 @@ export default function Cart() {
 
   function handleNewItemInput() {
     if (newItem.name !== "" && newItem.area !== "") {
-      API.AddItem(newItem).then((res) => {
-        dispatch({ type: "add-item", payload: res.data });
+      const newCart = state.cartItems.concat(newItem);
+
+      API.AddItem(newCart).then((res) => {
+        dispatch({ type: "add-item", payload: res.data.cart });
         setArray();
       });
     } else {
@@ -280,9 +280,13 @@ export default function Cart() {
               <TextInput
                 style={styles.input}
                 onChangeText={(text) => {
-                  setNewItem({ ...newItem, name: text });
+                  setNewItem({
+                    ...newItem,
+                    itemName: text,
+                    itemChecked: false,
+                  });
                 }}
-                value={newItem.name}
+                value={newItem.itemName}
                 placeholder="Item name..."
                 keyboardType="default"
                 clearButtonMode="always"
@@ -291,9 +295,13 @@ export default function Cart() {
               <TextInput
                 style={styles.input}
                 onChangeText={(text) => {
-                  setNewItem({ ...newItem, area: text });
+                  setNewItem({
+                    ...newItem,
+                    itemArea: text,
+                    itemChecked: false,
+                  });
                 }}
-                value={newItem.area}
+                value={newItem.itemArea}
                 placeholder="location in store..."
                 keyboardType="default"
                 clearButtonMode="always"
