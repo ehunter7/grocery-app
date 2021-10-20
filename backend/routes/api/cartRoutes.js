@@ -33,10 +33,22 @@ router.put("/addItem", async (req, res) => {
 router.put("/checkoff", async (req, res) => {
   const { name, checked } = req.body;
   try {
-    const updatedItem = await Family.findByIdAndUpdate({
-      _id: "616b48cd319d2d1df802f0e4",
+    const updatedCart = req.body.cart.map((item) => {
+      if (item.itemName === req.body.data.name) {
+        return { ...item, itemChecked: !item.itemChecked };
+      }
+      return item;
     });
-    // res.json(updatedItem);
+
+    const updatedItem = await Family.findByIdAndUpdate(
+      {
+        _id: "616b48cd319d2d1df802f0e4",
+      },
+      {
+        cart: updatedCart,
+      }
+    );
+    res.json(updatedItem);
   } catch (error) {
     console.log("[ERROR] put('/checkoff')");
     console.log(error);

@@ -56,7 +56,7 @@ export default function Cart() {
 
   function setArray() {
     let areaArray = [];
-    //Iterates through the hard coded cartItems to transfer to new array
+    //Iterates through the database cartItems to transfer to new array
     state.cartItems.forEach((element, index) => {
       //Capitalize the first letter of the location
       const location =
@@ -70,9 +70,10 @@ export default function Cart() {
         areaArray.push({
           area: location,
           itemChecked: element.itemChecked,
-          itemCheckedCount: 0,
+          itemCheckedCount: element.itemChecked ? 1 : 0,
           data: [
             {
+              id: element._id,
               name: element.itemName,
               checked: element.itemChecked,
               area: location,
@@ -83,13 +84,21 @@ export default function Cart() {
         //areaArray is not empty, check if incoming area exists in array
         areaArray.forEach((item) => {
           if (element.itemArea.toLowerCase() === item.area.toLowerCase()) {
+            let isChecked = false;
+            if (item.itemchecked || element.itemChecked) {
+              isChecked = true;
+            } else {
+              isChecked = false;
+            }
             //If location is already in array, push item to location
             item.data.push({
+              id: element._id,
               name: element.itemName,
               //TODO: increment total items
               checked: element.itemChecked,
               area: location,
             });
+
             pushed = true; //Item has been added to array
           }
         });
@@ -103,6 +112,7 @@ export default function Cart() {
             itemCheckedCount: 0,
             data: [
               {
+                id: element._id,
                 name: element.itemName,
                 checked: element.itemChecked,
                 area: element.itemArea,
@@ -114,7 +124,6 @@ export default function Cart() {
     });
     // set list to modified array
     setCart(areaArray);
-
     //reset temp array
     areaArray = [];
   }
@@ -127,6 +136,9 @@ export default function Cart() {
     //UpdatedCART contains modified list after item is checked off list
     const updatedCART = CART.map((item) => {
       //Finds the item that has been checked off in the list and changes its "Checked" status
+
+      //Used to track how many items have been chekced off.
+      let count;
       const newItem = item.data.map((item) => {
         //! Should have used another variable other than item due to it being used for first map
         if (item.name === e.name) {
@@ -139,9 +151,6 @@ export default function Cart() {
 
       //Finds the location which the item being checked off is located in and increments or decrements count of checked off items
       if (item.area === e.area) {
-        //Used to track how many items have been chekced off.
-        let count;
-
         // If item is already checked off and user is unchecking it, remove the area from the areaArray
         if (e.checked) {
           //If item is being unchecked, decrement count
@@ -185,8 +194,9 @@ export default function Cart() {
     }); //End of updatedCART .map method
     //sets the grocery list state to new updated list
     setCart(updatedCART);
-    API.Checkoff(e).then((res) => {});
-    console.log(res);
+    API.Checkoff(e, state.cartItems).then((res) => {
+      //console.log(res.data.cart);
+    });
     // dispatch({ type: "set-cart-item", payload: updatedCART });
   }
 
