@@ -56,72 +56,79 @@ export default function Cart() {
 
   function setArray() {
     let areaArray = [];
-    //Iterates through the database cartItems to transfer to new array
-    state.cartItems.forEach((element, index) => {
-      //Capitalize the first letter of the location
-      const location =
-        element.itemArea.charAt(0).toUpperCase() + element.itemArea.slice(1);
 
-      //used as a token to track if an item has been pushed to areaArray
-      let pushed = false;
+    if (CART.length) {
+      areaArray = CART;
+      console.log("62 ", CART);
+    } else {
+      console.log("lets get it", CART);
+      //Iterates through the database cartItems to transfer to new array
+      state.cartItems.forEach((element, index) => {
+        //Capitalize the first letter of the location
+        const location =
+          element.itemArea.charAt(0).toUpperCase() + element.itemArea.slice(1);
 
-      //If areaArea, which contains the contents for each area, is not empty
-      if (!areaArray.length) {
-        areaArray.push({
-          area: location,
-          itemChecked: element.itemChecked,
-          itemCheckedCount: element.itemChecked ? 1 : 0,
-          data: [
-            {
-              id: element._id,
-              name: element.itemName,
-              checked: element.itemChecked,
-              area: location,
-            },
-          ],
-        });
-      } else {
-        //areaArray is not empty, check if incoming area exists in array
-        areaArray.forEach((item) => {
-          if (element.itemArea.toLowerCase() === item.area.toLowerCase()) {
-            let isChecked = false;
-            if (item.itemchecked || element.itemChecked) {
-              isChecked = true;
-            } else {
-              isChecked = false;
-            }
-            //If location is already in array, push item to location
-            item.data.push({
-              id: element._id,
-              name: element.itemName,
-              //TODO: increment total items
-              checked: element.itemChecked,
-              area: location,
-            });
+        //used as a token to track if an item has been pushed to areaArray
+        let pushed = false;
 
-            pushed = true; //Item has been added to array
-          }
-        });
-
-        //if area was not found, push new location to areaArray
-        if (!pushed) {
+        //If areaArea, which contains the contents for each area, is not empty
+        if (!areaArray.length) {
           areaArray.push({
-            area: element.itemArea,
-            //TODO: Add total items
-            itemChecked: element.checked,
-            itemCheckedCount: 0,
+            area: location,
+            itemChecked: element.itemChecked,
+            itemCheckedCount: element.itemChecked ? 1 : 0,
             data: [
               {
                 id: element._id,
                 name: element.itemName,
                 checked: element.itemChecked,
-                area: element.itemArea,
+                area: location,
               },
             ],
           });
+        } else {
+          //areaArray is not empty, check if incoming area exists in array
+          areaArray.forEach((item) => {
+            if (element.itemArea.toLowerCase() === item.area.toLowerCase()) {
+              let isChecked = false;
+              if (item.itemchecked || element.itemChecked) {
+                isChecked = true;
+              } else {
+                isChecked = false;
+              }
+              //If location is already in array, push item to location
+              item.data.push({
+                id: element._id,
+                name: element.itemName,
+                //TODO: increment total items
+                checked: element.itemChecked,
+                area: location,
+              });
+
+              pushed = true; //Item has been added to array
+            }
+          });
+
+          //if area was not found, push new location to areaArray
+          if (!pushed) {
+            areaArray.push({
+              area: element.itemArea,
+              //TODO: Add total items
+              itemChecked: element.checked,
+              itemCheckedCount: 0,
+              data: [
+                {
+                  id: element._id,
+                  name: element.itemName,
+                  checked: element.itemChecked,
+                  area: element.itemArea,
+                },
+              ],
+            });
+          }
         }
-      }
-    });
+      });
+    } // end of if statement
     // set list to modified array
     setCart(areaArray);
     //reset temp array
@@ -195,9 +202,10 @@ export default function Cart() {
     //sets the grocery list state to new updated list
     setCart(updatedCART);
     API.Checkoff(e, state.cartItems).then((res) => {
-      //console.log(res.data.cart);
+      // console.log(res.data.cart);
+      // setArray();
     });
-    // dispatch({ type: "set-cart-item", payload: updatedCART });
+    //dispatch({ type: "set-cart-item", payload: [updatedCART] });
   }
 
   // Handles drop down arrow press, used for displaying checked off items
