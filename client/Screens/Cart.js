@@ -59,9 +59,7 @@ export default function Cart() {
 
     if (CART.length) {
       areaArray = CART;
-      console.log("62 ", CART);
     } else {
-      console.log("lets get it", CART);
       //Iterates through the database cartItems to transfer to new array
       state.cartItems.forEach((element, index) => {
         //Capitalize the first letter of the location
@@ -259,7 +257,7 @@ export default function Cart() {
         setArray();
       });
     } else {
-      console.log("No item entrered");
+      console.log("No item entered");
     }
   }
 
