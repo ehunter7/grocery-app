@@ -7,6 +7,7 @@ const Family = require("../../models/family");
 // gets all items ssaved in cart
 router.get("/items", async (req, res) => {
   try {
+    //TODO: Need to do more in the backend rather than passing everything to the front
     const allItems = await Family.find({ familyName: "Hunters" });
     res.json(allItems);
   } catch (error) {
@@ -16,9 +17,10 @@ router.get("/items", async (req, res) => {
 
 router.put("/addItem", async (req, res) => {
   console.log(req.body);
+
   try {
     const updateCart = await Family.findByIdAndUpdate(
-      "616b48cd319d2d1df802f0e4",
+      "616b48cd319d2d1df802f0e4", //ID for hunter family
       {
         cart: req.body,
       }

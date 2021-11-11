@@ -12,11 +12,26 @@ const FamilySchema = new Schema({
       memberfamily: String,
     },
   ],
+  // cart: [
+  //   {
+  //     itemName: String,
+  //     itemChecked: false,
+  //     itemArea: String,
+  //   },
+  // ],
   cart: [
     {
-      itemName: String,
-      itemChecked: false,
-      itemArea: String,
+      area: String,
+      itemChecked: Boolean,
+      itemCheckedCount: Number,
+      data: [
+        {
+          id: mongoose.Types.ObjectId,
+          name: String,
+          checked: Boolean,
+          area: String,
+        },
+      ],
     },
   ],
   recipe: [
