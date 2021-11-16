@@ -21,12 +21,11 @@ export default function HomeScreen({ navigation }) {
   const [state, dispatch] = useStateContext();
 
   let history = useHistory();
-  // const [cartItems, setCartItems] = useState({});
 
   useEffect(() => {
     API.getCartItems().then((res) => {
       dispatch({ type: "set-cart-items", payload: res.data[0] });
-      // console.log("getItems line 29 of homescreen", res.data[0].cart);
+      console.log("getItems line 29 of homescreen", res.data[0].cart);
     });
   }, []);
 

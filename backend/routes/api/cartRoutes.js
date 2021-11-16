@@ -9,7 +9,7 @@ router.get("/items", async (req, res) => {
   try {
     //TODO: Need to do more in the backend rather than passing everything to the front
     const allItems = await Family.find({ familyName: "Hunters" });
-    res.json(allItems);
+    res.json(allItems); //TODO: send only cart to global state
   } catch (error) {
     console.log("[ERROR] GET ITEMS", error);
   }
@@ -17,7 +17,46 @@ router.get("/items", async (req, res) => {
 
 router.put("/addItem", async (req, res) => {
   console.log(req.body);
+  // spread incoming item
 
+  // ** const {itemName, itemChecked, itemArea } = req.body
+  /** const incomingPayload = {
+      name: itemName,
+      checked: itemChecked,
+      area: itemArea,
+    }
+    */
+
+  // Check if area exist by trying to find area
+
+  /** 
+            let filter = {family.cart.data.name: itemArea};
+            let update = incomingPayload;
+            const opts = (new: true)
+
+            let updatedCart = await Family.findoneandupdate(filter, update, opts)
+
+    */
+
+  // If area does not exist
+  // add item to area
+
+  /**  
+      filter = {family.familyName: 'Hunters'};
+      update = {     
+        area: itemArea,
+        itemChecked: itemChecked,
+        itemCheckedCount: itemCheckedCount++,
+        data: [
+          incomingPayload
+        ],}
+
+      updateCart = await Family.findoneandupdate(filter, update, opts)
+      */
+
+  // End if
+  //TODO: If item exists add "x2" to the item to indicate needing two items
+  //TODO: Need to dump the results into global state
   try {
     const updateCart = await Family.findByIdAndUpdate(
       "616b48cd319d2d1df802f0e4", //ID for hunter family

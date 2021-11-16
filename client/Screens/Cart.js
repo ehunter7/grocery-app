@@ -33,6 +33,7 @@ export default function Cart() {
   const [newItemInputField, setNewItemInputField] = useState(false);
 
   //CART contains the imported grocery list
+  //! This will not be needed when switching SectionList from local state to global state.
   const [CART, setCart] = useState([]);
 
   //ToggleChecked is used to determine if the drop down arrow will area or not
@@ -51,7 +52,9 @@ export default function Cart() {
   }
 
   useEffect(() => {
-    setArray();
+    setCart(state.cartItems); //! This is important
+    //? Might not need to setr state if im just pulling from global
+    // setArray(); //This is how i was originally setting the cart
   }, [state]); // run on Mount
 
   function setArray() {
@@ -248,11 +251,12 @@ export default function Cart() {
     }
   }
 
+  // Would like to try to make this and all funciton pure
   function handleNewItemInput() {
     if (newItem.name !== "" && newItem.area !== "") {
       const newCart = state.cartItems.concat(newItem);
 
-      API.AddItem(newCart).then((res) => {
+      API.AddItem(newItem).then((res) => {
         dispatch({ type: "add-item", payload: res.data.cart });
         setArray();
       });
