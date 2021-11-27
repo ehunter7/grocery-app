@@ -15,9 +15,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Component for individual grocery list item
 import ListItem from "../components/ListItem";
-import AppTabs from "../components/AppTabs";
-import Screen from "../components/Screen";
-import AppButton from "../components/AppButton";
+
 import API from "../utils/api";
 import { useStateContext } from "../utils/GlobalState";
 
@@ -253,12 +251,13 @@ export default function Cart() {
 
   // Would like to try to make this and all funciton pure
   function handleNewItemInput() {
-    if (newItem.name !== "" && newItem.area !== "") {
+    console.log(newItem);
+    if (newItem.itemName !== "" && newItem.itemArea !== "") {
       const newCart = state.cartItems.concat(newItem);
-
+      console.log("Hey now!");
       API.AddItem(newItem).then((res) => {
-        dispatch({ type: "add-item", payload: res.data.cart });
-        setArray();
+        // dispatch({ type: "add-item", payload: res.data.cart });
+        // setArray();
       });
     } else {
       console.log("No item entered");

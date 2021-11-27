@@ -25,7 +25,7 @@ export default function AppTabs({ screen }) {
         },
         headerShown: false,
       })}
-      tabBarOptions={{
+      screenOptions={{
         activeTintColor: 'tomato',
         inactiveTintColor: 'gray',
       }}
