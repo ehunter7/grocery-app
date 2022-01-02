@@ -1,28 +1,15 @@
-import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  ScrollView,
-  TextInput,
-  TouchableOpacity,
-  SafeAreaView,
-  Image,
-} from "react-native";
+import React, { useEffect } from "react";
+import { StyleSheet, View, Image } from "react-native";
 import AppButton from "../components/AppButton";
-import { useHistory } from "react-router-dom";
-import Screen from "../components/Screen";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import API from "../utils/api";
 import { useStateContext } from "../utils/GlobalState";
 
 export default function HomeScreen({ navigation }) {
   const [state, dispatch] = useStateContext();
 
-  let history = useHistory();
-
   useEffect(() => {
+    //TODO: This will need to pass the family id to get only there items.
+    //Hard coded to only get hunters list
     API.getCartItems().then((res) => {
       dispatch({ type: "set-cart-items", payload: res.data[0] });
       console.log("getItems line 29 of homescreen", res.data[0].cart);
@@ -36,7 +23,6 @@ export default function HomeScreen({ navigation }) {
   }
 
   return (
-    // <Screen>
     <>
       <View style={{ ...StyleSheet.absoluteFill }}>
         <Image
@@ -63,10 +49,9 @@ export default function HomeScreen({ navigation }) {
           title="Recipe"
           onPress={() => navigation.navigate("Recipe")}
         />
-        <AppButton title="Recipe" onPress={() => newFamily()} />
+        <AppButton title="New Family" onPress={() => newFamily()} />
       </View>
     </>
-    //</Screen>
   );
 }
 

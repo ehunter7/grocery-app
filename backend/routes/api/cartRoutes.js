@@ -4,12 +4,12 @@ const router = express.Router();
 const Cart = require("../../models/grocery");
 const Family = require("../../models/family");
 
-// gets all items ssaved in cart
+// gets all items saved in cart || getCartItems api call
 router.get("/items", async (req, res) => {
   try {
     //TODO: Need to do more in the backend rather than passing everything to the front
     const allItems = await Family.find({ familyName: "Hunters" });
-    res.json(allItems); //TODO: send only cart to global state
+    res.json(allItems);
   } catch (error) {
     console.log("[ERROR] GET ITEMS", error);
   }
@@ -18,57 +18,56 @@ router.get("/items", async (req, res) => {
 router.put("/addItem", async (req, res) => {
   console.log(req.body);
   // spread incoming item
-
-  // ** const {itemName, itemChecked, itemArea } = req.body
-  /** const incomingPayload = {
-      name: itemName,
-      checked: itemChecked,
-      area: itemArea,
-    }
-    */
-
+  const { itemName, itemChecked, itemArea } = req.body;
+  console.log("itemName", itemName);
+  console.log("itemChecked", itemChecked);
+  console.log("itemArea", itemArea);
+  const incomingPayload = {
+    name: itemName,
+    checked: itemChecked,
+    area: itemArea,
+  };
+  console.log("incomingpayload object", incomingPayload);
+  console.log("Yop");
   // Check if area exist by trying to find area
-
-  /** 
-            let filter = {family.cart.data.name: itemArea};
-            let update = incomingPayload;
-            const opts = (new: true)
-
-            let updatedCart = await Family.findoneandupdate(filter, update, opts)
-
-    */
-
+  try {
+    const family = Family.find({ familyName: "Hunters" });
+    const cartItem = family.cart.data.name;
+    let filter = { cartItem: itemArea };
+    let update = incomingPayload;
+    const opts = { new: true };
+    let updatedCart = Family.findoneandupdate(filter, update, opts);
+    res.status(200);
+  } catch {
+    console.log("didnt work or was not found in family. Mother fucker...");
+  }
+  console.log("updatedCart", updatedCart);
   // If area does not exist
   // add item to area
-
-  /**  
-      filter = {family.familyName: 'Hunters'};
-      update = {     
-        area: itemArea,
-        itemChecked: itemChecked,
-        itemCheckedCount: itemCheckedCount++,
-        data: [
-          incomingPayload
-        ],}
-
-      updateCart = await Family.findoneandupdate(filter, update, opts)
-      */
-
+  filter = { familyName: "Hunters" };
+  update = {
+    area: itemArea,
+    itemChecked: itemChecked,
+    itemCheckedCount: itemCheckedCount++,
+    data: [incomingPayload],
+  };
+  updateCart = await Family.findoneandupdate(filter, update, opts);
   // End if
   //TODO: If item exists add "x2" to the item to indicate needing two items
   //TODO: Need to dump the results into global state
-  try {
-    const updateCart = await Family.findByIdAndUpdate(
-      "616b48cd319d2d1df802f0e4", //ID for hunter family
-      {
-        cart: req.body,
-      }
-    );
-
-    res.json(updateCart);
-  } catch (error) {
-    console.log("error with add item", error);
-  }
+  // try {
+  //   console.log("yep");
+  // ! OLD CODE, SAVE UNTIL NEW PORTION ABOVE WORKS
+  //   const updateCart = await Family.findByIdAndUpdate(
+  //     "616b48cd319d2d1df802f0e4", //ID for hunter family
+  //     {
+  //       cart: req.body,
+  //     }
+  //   );
+  //   res.json(updateCart);
+  // } catch (error) {
+  //   console.log("error with add item", error);
+  // }
 });
 
 router.put("/checkoff", async (req, res) => {

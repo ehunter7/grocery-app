@@ -1,4 +1,8 @@
 {
+  "scripts": {
+    "start": "cd backend && node server"
+
+  },
   "devDependencies": {
     "nodemon": "^2.0.13"
   }
