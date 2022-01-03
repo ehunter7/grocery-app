@@ -15,12 +15,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 // Component for individual grocery list item
 import ListItem from "../components/ListItem";
-
 import API from "../utils/api";
 import { useStateContext } from "../utils/GlobalState";
 
 export default function Cart() {
   // state for new item being added
+  //TODO: Switch this to use formik form
   const [newItem, setNewItem] = useState({
     itemName: "",
     itemChecked: false,
@@ -29,10 +29,6 @@ export default function Cart() {
 
   //state for new  item input field
   const [newItemInputField, setNewItemInputField] = useState(false);
-
-  //CART contains the imported grocery list
-  //! This will not be needed when switching SectionList from local state to global state.
-  const [CART, setCart] = useState([]);
 
   //ToggleChecked is used to determine if the drop down arrow will area or not
   const [toggleChecked, setToggleChecked] = useState({
@@ -44,126 +40,43 @@ export default function Cart() {
   });
 
   const [state, dispatch] = useStateContext();
+  console.log("-----------------------------");
+  console.log(state.cartItems.cart);
+  console.log("-----------------------------");
 
   function addItem() {
     setNewItemInputField(!newItemInputField);
   }
 
-  useEffect(() => {
-    setCart(state.cartItems); //! This is important
-    //? Might not need to setr state if im just pulling from global
-    // setArray(); //This is how i was originally setting the cart
-  }, [state]); // run on Mount
-
-  function setArray() {
-    let areaArray = [];
-
-    if (CART.length) {
-      areaArray = CART;
-    } else {
-      //Iterates through the database cartItems to transfer to new array
-      state.cartItems.forEach((element, index) => {
-        //Capitalize the first letter of the location
-        const location =
-          element.itemArea.charAt(0).toUpperCase() + element.itemArea.slice(1);
-
-        //used as a token to track if an item has been pushed to areaArray
-        let pushed = false;
-
-        //If areaArea, which contains the contents for each area, is not empty
-        if (!areaArray.length) {
-          areaArray.push({
-            area: location,
-            itemChecked: element.itemChecked,
-            itemCheckedCount: element.itemChecked ? 1 : 0,
-            data: [
-              {
-                id: element._id,
-                name: element.itemName,
-                checked: element.itemChecked,
-                area: location,
-              },
-            ],
-          });
-        } else {
-          //areaArray is not empty, check if incoming area exists in array
-          areaArray.forEach((item) => {
-            if (element.itemArea.toLowerCase() === item.area.toLowerCase()) {
-              let isChecked = false;
-              if (item.itemchecked || element.itemChecked) {
-                isChecked = true;
-              } else {
-                isChecked = false;
-              }
-              //If location is already in array, push item to location
-              item.data.push({
-                id: element._id,
-                name: element.itemName,
-                //TODO: increment total items
-                checked: element.itemChecked,
-                area: location,
-              });
-
-              pushed = true; //Item has been added to array
-            }
-          });
-
-          //if area was not found, push new location to areaArray
-          if (!pushed) {
-            areaArray.push({
-              area: element.itemArea,
-              //TODO: Add total items
-              itemChecked: element.checked,
-              itemCheckedCount: 0,
-              data: [
-                {
-                  id: element._id,
-                  name: element.itemName,
-                  checked: element.itemChecked,
-                  area: element.itemArea,
-                },
-              ],
-            });
-          }
-        }
-      });
-    } // end of if statement
-    // set list to modified array
-    setCart(areaArray);
-    //reset temp array
-    areaArray = [];
-  }
-
   //handles when user checks off item on list
   //Passes in e which is the item being checked off
-  function handlePress(e) {
+  function handlePress(incomingItem) {
     //TODO: need to change variable e to something more descriptive
 
     //UpdatedCART contains modified list after item is checked off list
-    const updatedCART = CART.map((item) => {
+    const updatedCART = state.cartItems.cart.map((cartObject) => {
       //Finds the item that has been checked off in the list and changes its "Checked" status
 
       //Used to track how many items have been chekced off.
       let count;
-      const newItem = item.data.map((item) => {
-        //! Should have used another variable other than item due to it being used for first map
-        if (item.name === e.name) {
+      const newItem = cartObject.data.map((cartItem) => {
+        if (cartItem.name === incomingItem.name) {
           //When item is found in array set checked value
-          return { ...item, checked: !item.checked };
+          return { ...cartItem, checked: !cartItem.checked };
         }
         //otherwise return item as is
-        return item;
+        return cartItem;
       });
 
       //Finds the location which the item being checked off is located in and increments or decrements count of checked off items
-      if (item.area === e.area) {
+      if (cartObject.area === incomingItem.area) {
         // If item is already checked off and user is unchecking it, remove the area from the areaArray
-        if (e.checked) {
+        if (incomingItem.checked) {
           //If item is being unchecked, decrement count
-          count = item.itemCheckedCount - 1;
+          count = cartObject.itemCheckedCount - 1;
           var token = true;
           const newData = toggleChecked.area.filter((item) => {
-            if (item === e.area && token) {
+            if (item === incomingItem.area && token) {
               token = false;
               return null;
             }
@@ -176,9 +89,9 @@ export default function Cart() {
         } else {
           //item was not checked
           //If item is being chekced off, increment count
-          count = item.itemCheckedCount + 1;
+          count = cartObject.itemCheckedCount + 1;
 
-          const newData = toggleChecked.area.concat(e.area);
+          const newData = toggleChecked.area.concat(incomingItem.area);
           setToggleChecked({
             ...toggleChecked,
             area: newData,
@@ -189,18 +102,18 @@ export default function Cart() {
         let checked = count > 0;
 
         return {
-          ...item,
+          ...cartObject,
           itemChecked: checked,
           itemCheckedCount: count,
           data: newItem,
         };
       } else {
-        return { ...item, data: newItem };
+        return { ...cartObject, data: newItem };
       }
     }); //End of updatedCART .map method
     //sets the grocery list state to new updated list
     setCart(updatedCART);
-    API.Checkoff(e, state.cartItems).then((res) => {
+    API.Checkoff(incomingItem, state.cartItems).then((res) => {
       // console.log(res.data.cart);
       // setArray();
     });
@@ -339,7 +252,7 @@ export default function Cart() {
           </>
         )}
         <SectionList
-          sections={CART}
+          sections={state.cartItems.cart}
           keyExtractor={(item, index) => item + index}
           renderSectionHeader={({ section }) => {
             return (

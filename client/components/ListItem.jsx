@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-// import CheckBox from '@react-native-community/checkbox';
 import { CheckBox } from 'react-native-elements'
 import Swipeable from 'react-native-gesture-handler/Swipeable'
 
